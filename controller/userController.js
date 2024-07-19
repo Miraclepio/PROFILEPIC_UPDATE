@@ -388,11 +388,20 @@ exports.updatePicture = async (req, res) => {
                 pictureId: cloudImage.public_id,
                 pictureUrl: cloudImage.secure_url
             };
+            fs.unlink(req.file.path,(err)=>{
+                if (err){
+                    console.log(err.message)
+                }
+                else{
+                    'successfully deleted'
+                }
+            })
 
             const updatedUser = await user.save();
 
             const userName = newUser.firstName || 'User'; // Default to 'User' if name is not available
             return res.status(200).json({ message: `${userName}'s profile picture has been updated`, updatedUser });
+            
         } catch (uploadError) {
             return res.status(400).json({ error: uploadError.message });
         }
